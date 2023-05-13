@@ -1,0 +1,28 @@
+@media (prefers-reduced-motion: no-preference) {
+    .App_logo {
+        animation: App_logo_spin infinite 20s linear;
+    }
+}
+@keyframes App_logo_spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+.header img{
+    width: 90px;
+}
+.header{
+    grid-area: h;
+    background: darkcyan;
+}
+.loginBlock{
+    float: right;
+}
+.loginBlock a {
+    color:white;
+}
