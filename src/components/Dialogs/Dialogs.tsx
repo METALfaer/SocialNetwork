@@ -1,52 +1,38 @@
-import React, {ChangeEvent} from 'react';
+import React from 'react';
 import s from './Dialogs.module.css'
 import {DialogItem} from "./DialogItem";
 import {Message} from "./Message";
 import {StateDialogsPageType} from "../../redux/dialogs-reducer";
-import {InjectedFormProps,reduxForm,Field} from "redux-form";
-
-/*export type LittleDialogsType = {
-    id: number
-    name: string
-}
-export type MessagesType = {
-    id: number
-    message: string
-}*/
+import {Field, InjectedFormProps, reduxForm} from "redux-form";
 
 
 export type DialogsType = {
-    updateNewMessageBody: (body: string) => void
+   /* updateNewMessageBody: (body: string) => void*/
     dialogsPage: StateDialogsPageType
-    sendMessage: () => void
+    sendMessage: (newMessageBody: any) => void
     isAuth: boolean | undefined
 }
 
 export const Dialogs = (props: DialogsType) => {
-
     let state = props.dialogsPage
 
-    const dialogsElements = state.dialogs.map(d =>
-        <DialogItem name={d.name} id={d.id} key={d.id}/>)
+    const dialogsElements = state.dialogs.map(d => <DialogItem name={d.name} id={d.id} key={d.id}/>)
+    const messagesElements = state.messages.map(m => <Message message={m.message} id={m.id} key={m.id}/>)
+    //const newMessageBody = state.newMessageBody
 
-    const messagesElements = state.messages.map(m =>
-        <Message message={m.message} id={m.id} key={m.id}/>)
-
-    const newMessageBody = state.newMessageBody
-
-    const addNewMessage=(values:any)=>{
-
+    const addNewMessage = (values: any) => {
+        props.sendMessage(values.newMessageBody)
     }
 
-    const onSendMessageClick = () => {
+    /*const onSendMessageClick = () => {
         props.sendMessage()
-    }
+    }*/
 
-    const onNewMessageChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    /*const onNewMessageChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
         let body = e.currentTarget.value
         props.updateNewMessageBody(body)
         //props.store.dispatch(updateNewMessageBodyCreator(body))
-    }
+    }*/
 
     return (
         <div className={s.dialogs}>
@@ -61,10 +47,10 @@ export const Dialogs = (props: DialogsType) => {
     );
 };
 
-type FormDataType={
-    login:string
-    password:string
-    rememberMe:boolean
+type FormDataType = {
+    login: string
+    password: string
+    rememberMe: boolean
 }
 const AddMessageForm: React.FC<InjectedFormProps<FormDataType>> = (props: any) => {
     return (
@@ -78,4 +64,4 @@ const AddMessageForm: React.FC<InjectedFormProps<FormDataType>> = (props: any) =
         </form>
     )
 }
-const AddMessageFormRedux=reduxForm<FormDataType>({form:'dialogAddMessageForm'})(AddMessageForm)
+const AddMessageFormRedux = reduxForm<FormDataType>({form: 'dialogAddMessageForm'})(AddMessageForm)
