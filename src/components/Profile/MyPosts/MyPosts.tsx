@@ -3,6 +3,8 @@ import {PostsType} from "../../../redux/profile-reducer";
 import s from './MyPosts.module.css'
 import Post from "./Post/Post";
 import {Field, InjectedFormProps, reduxForm} from "redux-form";
+import {maxLengthCreator, required} from "../../../utils/validators/validators";
+import {Textarea} from "../../common/FormsControls/FormsControls";
 
 
 export type MyPostsType = {
@@ -17,10 +19,13 @@ type FormDataType = {
     password: string
     rememberMe: boolean
 }
+const maxLength10 = maxLengthCreator(10)
 const AddNewPostForm: React.FC<InjectedFormProps<FormDataType>> = (props: any) => {
     return <form onSubmit={props.handleSubmit}>
         <div>
-            <Field name='newPostText' component='textarea'/>
+            <Field name='newPostText' component={Textarea}
+                   validate={[required, maxLength10]}
+                   placeholder='getPost'/>
         </div>
         <div>
             <button>
@@ -30,6 +35,7 @@ const AddNewPostForm: React.FC<InjectedFormProps<FormDataType>> = (props: any) =
     </form>;
 }
 const AddNewPostFormRedux = reduxForm<FormDataType>({form: 'ProfileAddNewPostForm'})(AddNewPostForm)
+
 
 export const MyPosts = (props: MyPostsType) => {
 
