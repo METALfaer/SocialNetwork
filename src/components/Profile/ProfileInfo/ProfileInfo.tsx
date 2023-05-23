@@ -2,6 +2,7 @@ import logo from "../../../logo.svg";
 import React from "react";
 import s from './ProfileInfo.module.css'
 import ProfileStatus from "./ProfileStatus";
+import ProfileStatusWithHooks from "./ProfileStatusWithHooks";
 
 
 type ProfileInfoType = {
@@ -24,7 +25,8 @@ export const ProfileInfo = (props: ProfileInfoType) => {
             </div>
             <div className={s.descriptionBlock}>
                 <img src={props.profile.photos.large}/>
-                <ProfileStatus status={props.status} updateStatus={props.updateUserStatus}/>
+                <ProfileStatusWithHooks status={props.status}
+                                        updateStatus={props.updateUserStatus}/>
             </div>
         </div>
     )

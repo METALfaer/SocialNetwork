@@ -37,7 +37,7 @@ const AddNewPostForm: React.FC<InjectedFormProps<FormDataType>> = (props: any) =
 const AddNewPostFormRedux = reduxForm<FormDataType>({form: 'ProfileAddNewPostForm'})(AddNewPostForm)
 
 
-export const MyPosts = (props: MyPostsType) => {
+export const MyPosts = React.memo((props: MyPostsType) => {
 
     //let newPostElement = React.createRef<HTMLTextAreaElement>()
     const postsElements = props.posts.map(p => <Post message={p.message} likesCount={p.likesCount} key={p.id}/>)
@@ -63,4 +63,4 @@ export const MyPosts = (props: MyPostsType) => {
             </div>
         </div>
     )
-}
+})

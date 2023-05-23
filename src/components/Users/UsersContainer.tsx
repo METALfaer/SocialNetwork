@@ -1,17 +1,16 @@
 import React from 'react'
 import {connect} from "react-redux";
 import {Users} from "./Users";
-import {Follow, requestUsers, InitialStateType, setCurrentPage, unFollow} from "../../redux/users-reducer";
+import {Follow, InitialStateType, requestUsers, setCurrentPage, unFollow} from "../../redux/users-reducer";
 import {StoreType} from "../../redux/redux-store";
-import WithAuthRedirect from "../../hoc/withAuthRedirect";
-import { compose } from 'redux';
+import {compose} from 'redux';
 import {
     getCurrentPage,
     getDisable,
     getIsAuth,
     getPageSize,
     getTotalUsersCount,
-    getUsers
+    getUserSelector
 } from "../../redux/users-selectors";
 
 
@@ -82,7 +81,8 @@ class UsersContainer extends React.Component<UsersContainerType> {
 
 const mapStateToProps = (state: StoreType): MapStateToPropsType => {
     return {
-        users: getUsers(state),
+        //users: getUsers(state),
+        users: getUserSelector(state),
         pageSize: getPageSize(state),
         totalUsersCount: getTotalUsersCount(state),
         currentPage: getCurrentPage(state),
