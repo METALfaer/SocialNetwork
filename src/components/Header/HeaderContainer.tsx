@@ -1,7 +1,7 @@
 import React from "react";
 import {Header} from "./Header";
 import {connect} from "react-redux";
-import {authMe, logOut} from "../../redux/auth-reducer";
+import {logOut} from "../../redux/auth-reducer";
 import {StoreType} from "../../redux/redux-store";
 
 
@@ -9,23 +9,22 @@ type HeaderContainerType = {
     //setAuthUserData: (userId: number, email: string, login: string) => void
     isAuth?: boolean
     login: string | null
-    authMe: () => void
-    logOut:()=>void
+    logOut: () => void
 }
 
 
 class HeaderContainer extends React.Component<HeaderContainerType> {
-    componentDidMount() {
+    /*componentDidMount() {
 
         this.props.authMe()
-        /*headerAPI.getAuthMe()
+        /!*headerAPI.getAuthMe()
             .then(res => {
                 if (res.resultCode === 0) {
                     const {id, email, login} = res.data
                     this.props.setAuthUserData(id, email, login)
                 }
-            })*/
-    }
+            })*!/
+    }*/
 
     /*axios.get(`https://social-network.samuraijs.com/api/1.0/auth/me`, {
         withCredentials: true
@@ -55,4 +54,4 @@ const mapStateToProps = (state: StoreType): MapStateToPropsType => {
         login: state.auth.login
     }
 }
-export default connect(mapStateToProps, {authMe,logOut})(HeaderContainer)
+export default connect(mapStateToProps, {logOut})(HeaderContainer)

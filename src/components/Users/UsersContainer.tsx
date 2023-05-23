@@ -1,10 +1,18 @@
 import React from 'react'
 import {connect} from "react-redux";
 import {Users} from "./Users";
-import {Follow, getUsers, InitialStateType, setCurrentPage, unFollow} from "../../redux/users-reducer";
+import {Follow, requestUsers, InitialStateType, setCurrentPage, unFollow} from "../../redux/users-reducer";
 import {StoreType} from "../../redux/redux-store";
 import WithAuthRedirect from "../../hoc/withAuthRedirect";
 import { compose } from 'redux';
+import {
+    getCurrentPage,
+    getDisable,
+    getIsAuth,
+    getPageSize,
+    getTotalUsersCount,
+    getUsers
+} from "../../redux/users-selectors";
 
 
 export type MapStateToPropsType = {
@@ -61,7 +69,7 @@ class UsersContainer extends React.Component<UsersContainerType> {
     }
 }
 
-const mapStateToProps = (state: StoreType): MapStateToPropsType => {
+/*const mapStateToProps = (state: StoreType): MapStateToPropsType => {
     return {
         users: state.usersPage.users,
         pageSize: state.usersPage.pageSize,
@@ -70,8 +78,19 @@ const mapStateToProps = (state: StoreType): MapStateToPropsType => {
         disable: state.usersPage.disable,
         isAuth: state.auth.isAuth
     }
+}*/
+
+const mapStateToProps = (state: StoreType): MapStateToPropsType => {
+    return {
+        users: getUsers(state),
+        pageSize: getPageSize(state),
+        totalUsersCount: getTotalUsersCount(state),
+        currentPage: getCurrentPage(state),
+        disable: getDisable(state),
+        isAuth: getIsAuth(state)
+    }
 }
-//export type UsersPropsType = MapStateToPropsType | MapDispatchToPropsType
+
 
 /*
 const mapDispatchToProps = (dispatch: Dispatch): MapDispatchToPropsType => {
@@ -96,11 +115,9 @@ const mapDispatchToProps = (dispatch: Dispatch): MapDispatchToPropsType => {
 
 
 export default compose<React.ComponentType>(
-    WithAuthRedirect,
+    //WithAuthRedirect,
     connect(mapStateToProps, {
-        setCurrentPage, getUsers, unFollow, Follow
+        setCurrentPage, getUsers: requestUsers, unFollow, Follow
     })
 )(UsersContainer)
-/*export default WithAuthRedirect(connect(mapStateToProps, {
-    setCurrentPage, getUsers, unFollow, Follow
-})(UsersContainer))*/
+

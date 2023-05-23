@@ -6,14 +6,13 @@ import {createRoot} from "react-dom/client";
 import {Provider} from "react-redux";
 import reportWebVitals from "./reportWebVitals";
 import store from "./redux/redux-store";
+import {authMe} from "./redux/auth-reducer";
 
 const root = createRoot(document.getElementById('root') as HTMLElement);
-
-
     root.render(
         <BrowserRouter>
             <Provider store={store}>
-                <App/>
+                <App />
             </Provider>
         </BrowserRouter>
     )

@@ -1,5 +1,5 @@
 import {headerAPI, logInDataType} from "../api/headerAPI";
-import {AppActionsType, AppThunk} from "./redux-store";
+import {AppThunk} from "./redux-store";
 import {stopSubmit} from "redux-form";
 
 type StateType = {
@@ -25,7 +25,7 @@ let initialState = {
     isAuth: false
 }
 
-export const authReducer = (state: StateType = initialState, action: AppActionsType) => {
+export const authReducer = (state: StateType = initialState, action: AuthActionsType) => {
     switch (action.type) {
         case SET_USER_DATA: {
             return {
@@ -48,7 +48,7 @@ export const setAuthUserData = (userId: number | null,
 
 export const authMe = (): AppThunk => {
     return (dispatch) => {
-        headerAPI.getAuthMe()
+       return headerAPI.getAuthMe()
             .then(res => {
                 if (res.resultCode === 0) {
                     const {id, email, login} = res.data
@@ -57,10 +57,7 @@ export const authMe = (): AppThunk => {
             })
     }
 }
-/*type fds={
-    form:string
-    errors:Object
-}*/
+
 
 export const logIn = (data: logInDataType): AppThunk  => {
     return (dispatch) => {
@@ -72,7 +69,7 @@ export const logIn = (data: logInDataType): AppThunk  => {
                     let message = data.messages.length > 0
                         ? data.messages[0]
                         : 'Some error'
-                    dispatch(stopSubmit('login', {_error: message})as any)
+                    dispatch(stopSubmit('login', {_error: message}) )
                 }
             })
     }

@@ -136,9 +136,11 @@ export const disableButton = (disable: boolean, userId: number): DisableButtonTy
 })
 
 
-export const getUsers = (currentPage: number, pageSize: number):AppThunk => {
+export const requestUsers = (page: number, pageSize: number):AppThunk => {
     return (dispatch) => {
-        userAPI.getUsers(currentPage, pageSize)
+        dispatch(setCurrentPage(page))
+
+        userAPI.getUsers(page, pageSize)
             .then(res => {
                 dispatch(setUsers(res.items))
                 dispatch(setTotalUsersCount(res.totalCount))

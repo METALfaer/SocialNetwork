@@ -74,7 +74,7 @@ export const Users = (props: UsersType) => {
         pages.push(i)
     }
 
-    if (props.isAuth===false) return <Redirect to={'/login'}/>
+    //if (props.isAuth===false) return <Redirect to={'/login'}/>
     return <div>
         <div>
             {pages.map(p => {
