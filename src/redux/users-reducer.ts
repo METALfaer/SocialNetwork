@@ -1,5 +1,6 @@
 import {userAPI} from "../api/userAPI";
-import {Dispatch} from "react";
+import {Dispatch} from "redux";
+import {AppThunk} from "./redux-store";
 
 
 export const FOLLOW = 'FOLLOW'
@@ -35,7 +36,7 @@ export type DisableButtonType = {
     userId: number
 }
 
-export type UsersActionTypes = FollowType
+export type UsersActionsType = FollowType
     | UnfollowType
     | SetUsersType
     | SetCurrentPageType
@@ -67,7 +68,7 @@ const initialState: UsersStateType = {
     disable: [],
 }
 
-export const usersReducer = (state: UsersStateType = initialState, action: UsersActionTypes): UsersStateType => {
+export const usersReducer = (state: UsersStateType = initialState, action: UsersActionsType): UsersStateType => {
     switch (action.type) {
         case FOLLOW:
             return {
@@ -135,8 +136,8 @@ export const disableButton = (disable: boolean, userId: number): DisableButtonTy
 })
 
 
-export const getUsers = (currentPage: number, pageSize: number) => {
-    return (dispatch: Dispatch<UsersActionTypes>) => {
+export const getUsers = (currentPage: number, pageSize: number):AppThunk => {
+    return (dispatch) => {
         userAPI.getUsers(currentPage, pageSize)
             .then(res => {
                 dispatch(setUsers(res.items))
@@ -145,8 +146,8 @@ export const getUsers = (currentPage: number, pageSize: number) => {
     }
 }
 
-export const unFollow = (userId: number) => {
-    return (dispatch: Dispatch<UsersActionTypes>) => {
+export const unFollow = (userId: number):AppThunk => {
+    return (dispatch) => {
         dispatch(disableButton(true, userId))
         userAPI.unfollow(userId)
             .then(res => {
@@ -161,8 +162,8 @@ export const unFollow = (userId: number) => {
     }
 }
 
-export const Follow = (userId: number) => {
-    return (dispatch: Dispatch<UsersActionTypes>) => {
+export const Follow = (userId: number):AppThunk => {
+    return (dispatch) => {
         dispatch(disableButton(true, userId))
         userAPI.follow(userId)
             .then(res => {

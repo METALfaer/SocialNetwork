@@ -11,5 +11,21 @@ export const headerAPI = {
     getAuthMe() {
         return instance.get(`auth/me`)
             .then(res => res.data)
+    },
+    logIn(data:logInDataType) {
+        return instance.post(`auth/login`,{
+            email : data.email,
+            password: data.password,
+        })
+            .then(res => res.data)
+    },
+    logOut() {
+        return instance.delete(`auth/login`)
+            .then(res => res.data)
     }
+}
+export type logInDataType={
+    email:string
+    password:any
+    rememberMe:boolean
 }

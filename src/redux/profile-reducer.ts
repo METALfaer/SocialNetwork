@@ -1,5 +1,6 @@
 import {profileAPI} from "../api/profileAPI";
-import {Dispatch} from "react";
+import {Dispatch} from "redux";
+import {AppThunk} from "./redux-store";
 
 const ADD_POST = 'ADD-POST';
 //const UPDATE_NEW_POST_TEXT = 'UPDATE-NEW-POST-TEXT';
@@ -49,7 +50,7 @@ export type SetStatusType = {
     type: 'SET_STATUS'
 }
 
-export type ProfileActionTypes = AddPostActionType
+export type ProfileActionsType = AddPostActionType
     | UpdateNewPostTextActionType
     | SetUserProfileType
     | SetStatusType
@@ -63,7 +64,7 @@ let initialState: StateProfilePageType = {
     status: ''
 }
 
-const profileReducer = (state = initialState, action: ProfileActionTypes) => {
+const profileReducer = (state = initialState, action: ProfileActionsType) => {
 
     switch (action.type) {
 
@@ -126,8 +127,8 @@ export const setUserProfile = (profile: UserProfileType): SetUserProfileType => 
 export const setStatus = (status: any): SetStatusType => (
     {type: SET_STATUS, status})
 
-export const setProfile = (userId: number) => {
-    return (dispatch: Dispatch<ProfileActionTypes>) => {
+export const setProfile = (userId: number):AppThunk => {
+    return (dispatch) => {
         profileAPI.getUserId(userId)
             .then(data => {
                 dispatch(setUserProfile(data))
@@ -135,8 +136,8 @@ export const setProfile = (userId: number) => {
     }
 }
 
-export const getUserStatus = (userId: any) => {
-    return (dispatch: Dispatch<ProfileActionTypes>) => {
+export const getUserStatus = (userId: any):AppThunk => {
+    return (dispatch) => {
         profileAPI.getUserStatus(userId)
             .then(data => {
                 dispatch(setStatus(data))
@@ -144,8 +145,8 @@ export const getUserStatus = (userId: any) => {
     }
 }
 
-export const updateUserStatus = (status: any) => {
-    return (dispatch: Dispatch<ProfileActionTypes>) => {
+export const updateUserStatus = (status: any):AppThunk => {
+    return (dispatch) => {
         profileAPI.updateStatus(status)
             .then(data => {
                 if(data.resultCode===0){

@@ -27,7 +27,7 @@ export type SendMessageType = {
     newMessageBody:any
 }
 
-export type ActionTypes = UpdateNewMessageBodyType
+export type DialogsActionsTypes = UpdateNewMessageBodyType
     | SendMessageType
 
 
@@ -48,7 +48,7 @@ let initialState: StateDialogsPageType = {
     ],
 }
 
-const dialogsReducer = (state: StateDialogsPageType = initialState, action: ActionTypes) => {
+const dialogsReducer = (state: StateDialogsPageType = initialState, action: DialogsActionsTypes) => {
 
     switch (action.type) {
 
