@@ -1,18 +1,17 @@
 import logo from "../../../logo.svg";
 import React from "react";
 import s from './ProfileInfo.module.css'
-import ProfileStatus from "./ProfileStatus";
 import ProfileStatusWithHooks from "./ProfileStatusWithHooks";
 
 
 type ProfileInfoType = {
     profile: any
     status: any
-    updateUserStatus: (status:any)=>void
+    updateUserStatus: (status: any) => void
 }
 export const ProfileInfo = (props: ProfileInfoType) => {
 
-    if(!props.profile){
+    if (!props.profile) {
         return <div className='face'>
             <img src={logo} className={s.App_logo} alt="logo"/>
         </div>

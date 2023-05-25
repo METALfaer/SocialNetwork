@@ -1,9 +1,7 @@
 import {InitialStateType} from "../../redux/users-reducer";
-import styles from './Users.module.css'
 import React from 'react'
-import seriousSem from '../assets/seriousSem.jpg'
-import {NavLink} from "react-router-dom";
 import {Paginator} from "../common/Paginator/Paginator";
+import {User} from "./User";
 
 export type UsersType = {
     users: Array<InitialStateType>
@@ -70,51 +68,62 @@ export const Users = (props: UsersType) => {
             pageNumber}&count=${this.props.pageSize}`)
     }*/
 
-    let pagesCount: number = Math.ceil(props.totalUsersCount / props.pageSize)
+    /* let pagesCount: number = Math.ceil(props.totalUsersCount / props.pageSize)
 
-    let pages: Array<number> = [];
-    for (let i = 1; i <= pagesCount; i++) {
-        pages.push(i)
-    }
+     let pages: Array<number> = [];
+     for (let i = 1; i <= pagesCount; i++) {
+         pages.push(i)
+     }*/
 
     //if (props.isAuth===false) return <Redirect to={'/login'}/>
     return <div>
         <Paginator currentPage={props.currentPage} onPageChanged={props.onPageChanged}
                    totalUsersCount={props.totalUsersCount}
-                   pageSize={props.pageSize} />
-        {
-            props.users.map(u => <div key={u.id}>
-            <span>
-                <div>
-                    <NavLink to={'/profile/' + u.id}>
-                    <img src={u.photos.small != null ? u.photos.small : seriousSem}
-                         className={styles.userPhoto}/>
-                </NavLink>
-                </div>
-                <div>
-                    {u.followed
-                        ? <button disabled={props.disable.some(id => id === u.id)}
-                                  onClick={() => {
-                                      props.unFollow(u.id)
-                                  }}>Unfollow</button>
-                        : <button disabled={props.disable.some(id => id === u.id)}
-                                  onClick={() => {
-                                      props.Follow(u.id)
-                                  }}>Follow</button>
-                    }
-                </div>
-            </span>
+                   pageSize={props.pageSize}/>
+        <div>
+            {
+                props.users.map(u => <User key={u.id} Follow={props.Follow}
+                                           unFollow={props.unFollow}
+                                           disable={props.disable}
+                                           onPageChanged={props.onPageChanged}
+                                           pageSize={props.pageSize}
+                                           totalUsersCount={props.totalUsersCount}
+                                           currentPage={props.currentPage}
+                                           user={u}
+                    />
+                    /*<div key={u.id}>
                 <span>
-                    <span>
-                        <div>{u.name}</div>
-                        <div>{u.status}</div>
-                    </span>
-                    <span>
-                        <div>u.location.country</div>
-                        <div>u.location.city</div>
-                    </span>
+                    <div>
+                        <NavLink to={'/profile/' + u.id}>
+                        <img src={u.photos.small != null ? u.photos.small : seriousSem}
+                             className={styles.userPhoto}/>
+                    </NavLink>
+                    </div>
+                    <div>
+                        {u.followed
+                            ? <button disabled={props.disable.some(id => id === u.id)}
+                                      onClick={() => {
+                                          props.unFollow(u.id)
+                                      }}>Unfollow</button>
+                            : <button disabled={props.disable.some(id => id === u.id)}
+                                      onClick={() => {
+                                          props.Follow(u.id)
+                                      }}>Follow</button>
+                        }
+                    </div>
                 </span>
-            </div>)
-        }
+                    <span>
+                        <span>
+                            <div>{u.name}</div>
+                            <div>{u.status}</div>
+                        </span>
+                        <span>
+                            <div>u.location.country</div>
+                            <div>u.location.city</div>
+                        </span>
+                    </span>
+                </div>*/)
+            }
+        </div>
     </div>
 }
