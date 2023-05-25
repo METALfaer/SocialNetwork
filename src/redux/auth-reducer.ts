@@ -9,10 +9,10 @@ type StateType = {
     isAuth?: boolean
 }
 
-const SET_USER_DATA = 'SET_USER_DATA'
+const SET_USER_DATA = 'AUTH/SET_USER_DATA'
 
 export type SetAuthUserDataType = {
-    type: 'SET_USER_DATA'
+    type: 'AUTH/SET_USER_DATA'
     payload: StateType
 
 }
@@ -42,50 +42,45 @@ export const setAuthUserData = (userId: number | null,
                                 email: string | null,
                                 login: string | null,
                                 isAuth: boolean): SetAuthUserDataType => ({
-    type: "SET_USER_DATA",
+    type: "AUTH/SET_USER_DATA",
     payload: {userId, email, login, isAuth}
 })
 
 export const authMe = (): AppThunk => {
-    return (dispatch) => {
-       return headerAPI.getAuthMe()
-            .then(res => {
-                if (res.resultCode === 0) {
-                    const {id, email, login} = res.data
-                    dispatch(setAuthUserData(id, email, login, true))
-                }
-            })
+    return async (dispatch) => {
+        let response = await headerAPI.getAuthMe()
+
+        if (response.resultCode === 0) {
+            const {id, email, login} = response.data
+            dispatch(setAuthUserData(id, email, login, true))
+        }
     }
 }
 
 
-export const logIn = (data: logInDataType): AppThunk  => {
-    return (dispatch) => {
-        headerAPI.logIn(data)
-            .then(data => {
-                if (data.resultCode === 0) {
-                    dispatch(authMe())
-                } else {
-                    let message = data.messages.length > 0
-                        ? data.messages[0]
-                        : 'Some error'
-                    dispatch(stopSubmit('login', {_error: message}) )
-                }
-            })
+export const logIn = (data: logInDataType): AppThunk => {
+    return async (dispatch) => {
+        let response = await headerAPI.logIn(data)
+        if (response.resultCode === 0) {
+            dispatch(authMe())
+        } else {
+            let message = response.messages.length > 0
+                ? response.messages[0]
+                : 'Some error'
+            dispatch(stopSubmit('login', {_error: message}))
+        }
     }
 }
 
 export const logOut = (): AppThunk => {
-    return (dispatch) => {
-        headerAPI.logOut()
-            .then(data => {
-                if (data.resultCode === 0) {
-                    dispatch(setAuthUserData(
-                        null,
-                        null,
-                        null,
-                        false))
-                }
-            })
+    return async (dispatch) => {
+        let response = await headerAPI.logOut()
+        if (response.resultCode === 0) {
+            dispatch(setAuthUserData(
+                null,
+                null,
+                null,
+                false))
+        }
     }
 }

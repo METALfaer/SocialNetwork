@@ -1,6 +1,6 @@
 import {userAPI} from "../api/userAPI";
-import {Dispatch} from "redux";
 import {AppThunk} from "./redux-store";
+import {updateObjectInArray} from "../utils/object-helpers";
 
 
 export const FOLLOW = 'FOLLOW'
@@ -73,23 +73,25 @@ export const usersReducer = (state: UsersStateType = initialState, action: Users
         case FOLLOW:
             return {
                 ...state,
-                users: state.users.map(u => {
-                    if (u.id === action.userId) {
-                        return {...u, followed: true}
-                    }
-                    return u
-                })
+                users: updateObjectInArray(state.users,
+                    action.userId,
+                    'id',
+                    {followed: true})
             }
 
         case UNFOLLOW:
             return {
                 ...state,
-                users: state.users.map(u => {
+                users: updateObjectInArray(state.users,
+                    action.userId,
+                    'id',
+                    {followed: false})
+                /*state.users.map(u => {
                     if (u.id === action.userId) {
                         return {...u, followed: false}
                     }
                     return u
-                })
+                })*/
             }
 
         case SET_USERS: {
@@ -136,47 +138,57 @@ export const disableButton = (disable: boolean, userId: number): DisableButtonTy
 })
 
 
-export const requestUsers = (page: number, pageSize: number):AppThunk => {
-    return (dispatch) => {
+export const requestUsers = (page: number, pageSize: number): AppThunk => {
+    return async (dispatch) => {
         dispatch(setCurrentPage(page))
 
-        userAPI.getUsers(page, pageSize)
-            .then(res => {
-                dispatch(setUsers(res.items))
-                dispatch(setTotalUsersCount(res.totalCount))
-            })
+        let response = await userAPI.getUsers(page, pageSize)
+        dispatch(setUsers(response.items))
+        dispatch(setTotalUsersCount(response.totalCount))
     }
 }
 
-export const unFollow = (userId: number):AppThunk => {
-    return (dispatch) => {
-        dispatch(disableButton(true, userId))
-        userAPI.unfollow(userId)
-            .then(res => {
-                    if (res.resultCode === 0) {
-                        dispatch(unfollow(userId))
-                    } else {
-                        alert("ERROR")
-                    }
-                dispatch(disableButton(false, userId))
-                }
-            )
+const followUnfollowFlow = async (dispatch: any, userId: any, apiMethod: any, actionCreator: any) => {
+    dispatch(disableButton(true, userId))
+    let response = await apiMethod(userId)
+
+    if (response.resultCode === 0) {
+        dispatch(actionCreator(userId))
+    } else {
+        alert("ERROR")
+    }
+    dispatch(disableButton(false, userId))
+}
+
+export const unFollow = (userId: number): AppThunk => {
+    return async (dispatch) => {
+        followUnfollowFlow(dispatch, userId, userAPI.unfollow.bind(userId), unfollow)
+
+        /*dispatch(disableButton(true, userId))
+        let response = await apiMethod(userId)
+
+        if (response.resultCode === 0) {
+            dispatch(actionCreator(userId))
+        } else {
+            alert("ERROR")
+        }
+        dispatch(disableButton(false, userId))*/
     }
 }
 
-export const Follow = (userId: number):AppThunk => {
-    return (dispatch) => {
-        dispatch(disableButton(true, userId))
-        userAPI.follow(userId)
-            .then(res => {
-                    if (res.resultCode === 0) {
-                        dispatch(follow(userId))
-                    } else {
-                        alert("ERROR")
-                    }
-                    dispatch(disableButton(false, userId))
-                }
-            )
+export const Follow = (userId: number): AppThunk => {
+    return async (dispatch) => {
+        followUnfollowFlow(dispatch, userId, userAPI.follow.bind(userId), follow)
+
+        /*dispatch(disableButton(true, userId))
+        let response = await apiMethod(userId)
+
+        if (response.resultCode === 0) {
+            dispatch(actionCreator(userId))
+        } else {
+            alert("ERROR")
+        }
+        dispatch(disableButton(false, userId))*/
     }
 }
 

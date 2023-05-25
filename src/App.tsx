@@ -13,12 +13,11 @@ import {initializeApp} from "./redux/app-reducer";
 import {StoreType} from "./redux/redux-store";
 import logo from "./logo.svg";
 import s from "./components/Profile/ProfileInfo//ProfileInfo.module.css";
-//import {ActionTypes, StateType, StoreType} from "./redux/store";
 
 
 type AppType = {
     initializeApp: () => void
-    initialized:boolean
+    initialized: boolean
 }
 
 class App extends Component<AppType> {
@@ -34,11 +33,12 @@ class App extends Component<AppType> {
     }
 
     render() {
-        if(!this.props.initialized){
+        if (!this.props.initialized) {
             return <div className='face'>
                 <img src={logo} className={s.App_logo} alt="logo"/>
             </div>
         }
+
         return (
             <div className='app-wrapper'>
 
@@ -62,10 +62,11 @@ class App extends Component<AppType> {
         );
     }
 }
-type mapStateToPropsType={
-    initialized:boolean
+
+type mapStateToPropsType = {
+    initialized: boolean
 }
-const mapStateToProps = (state: StoreType):mapStateToPropsType => ({
+const mapStateToProps = (state: StoreType): mapStateToPropsType => ({
     initialized: state.app.initialized
 })
 export default compose<React.ComponentType>(

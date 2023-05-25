@@ -1,5 +1,4 @@
 import {profileAPI} from "../api/profileAPI";
-import {Dispatch} from "redux";
 import {AppThunk} from "./redux-store";
 
 const ADD_POST = 'ADD-POST';
@@ -35,7 +34,7 @@ export type UserProfileType = {
 }
 export type AddPostActionType = {
     type: 'ADD-POST'
-    newPostText:any
+    newPostText: any
 }
 export type UpdateNewPostTextActionType = {
     type: 'UPDATE-NEW-POST-TEXT',
@@ -91,15 +90,15 @@ const profileReducer = (state = initialState, action: ProfileActionsType) => {
         stateCopy.newPostText = ''
         return stateCopy*/
 
-       /* case UPDATE_NEW_POST_TEXT: {
-            return {
-                ...state,
-                newPostText: action.newText
-            }
-            /!* let stateCopy = {...state}
-             stateCopy.newPostText = action.newText
-             return stateCopy*!/
-        }*/
+        /* case UPDATE_NEW_POST_TEXT: {
+             return {
+                 ...state,
+                 newPostText: action.newText
+             }
+             /!* let stateCopy = {...state}
+              stateCopy.newPostText = action.newText
+              return stateCopy*!/
+         }*/
 
         case SET_USER_PROFILE: {
             return {
@@ -119,7 +118,7 @@ const profileReducer = (state = initialState, action: ProfileActionsType) => {
     }
 }
 
-export const addPostActionCreator = (newPostText: any): AddPostActionType => ({type: ADD_POST,newPostText})
+export const addPostActionCreator = (newPostText: any): AddPostActionType => ({type: ADD_POST, newPostText})
 /*export const updateNewPostTextActionCreator = (text: string): UpdateNewPostTextActionType => (
     {type: UPDATE_NEW_POST_TEXT, newText: text})*/
 export const setUserProfile = (profile: UserProfileType): SetUserProfileType => (
@@ -127,32 +126,26 @@ export const setUserProfile = (profile: UserProfileType): SetUserProfileType => 
 export const setStatus = (status: any): SetStatusType => (
     {type: SET_STATUS, status})
 
-export const setProfile = (userId: number):AppThunk => {
-    return (dispatch) => {
-        profileAPI.getUserId(userId)
-            .then(data => {
-                dispatch(setUserProfile(data))
-            })
+export const setProfile = (userId: number): AppThunk => {
+    return async (dispatch) => {
+        let response = await profileAPI.getUserId(userId)
+        dispatch(setUserProfile(response))
     }
 }
 
-export const getUserStatus = (userId: any):AppThunk => {
-    return (dispatch) => {
-        profileAPI.getUserStatus(userId)
-            .then(data => {
-                dispatch(setStatus(data))
-            })
+export const getUserStatus = (userId: any): AppThunk => {
+    return async (dispatch) => {
+        let response = await profileAPI.getUserStatus(userId)
+        dispatch(setStatus(response))
     }
 }
 
-export const updateUserStatus = (status: any):AppThunk => {
-    return (dispatch) => {
-        profileAPI.updateStatus(status)
-            .then(data => {
-                if(data.resultCode===0){
-                    dispatch(setStatus(status))
-                }
-            })
+export const updateUserStatus = (status: any): AppThunk => {
+    return async (dispatch) => {
+        let response = await profileAPI.updateStatus(status)
+        if (response.resultCode === 0) {
+            dispatch(setStatus(status))
+        }
     }
 }
 

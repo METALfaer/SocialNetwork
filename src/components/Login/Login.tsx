@@ -1,6 +1,6 @@
-import {Field, InjectedFormProps, reduxForm} from "redux-form";
+import {InjectedFormProps, reduxForm} from "redux-form";
 import React from "react";
-import {Input} from "../common/FormsControls/FormsControls";
+import {createFild, Input} from "../common/FormsControls/FormsControls";
 import {required} from "../../utils/validators/validators";
 import {connect} from "react-redux";
 import {logIn, logOut} from "../../redux/auth-reducer";
@@ -39,15 +39,21 @@ type FormDataType = {
     password: string
     rememberMe: boolean
 }
-export const LoginForm: React.FC<InjectedFormProps<FormDataType>> = (props: any) => {
+export const LoginForm: React.FC<InjectedFormProps<FormDataType>> = ({handleSubmit, error}) => {
     return (
-        <form onSubmit={props.handleSubmit}>
-            <div>
+        <form onSubmit={handleSubmit}>
+            {createFild('Email', 'email', [required], Input)}
+            {createFild('Password', 'password',
+                [required], Input, {type: 'password'})}
+            {createFild(null, 'remember me',
+                [], Input,
+                {type: 'checkbox'}, 'rememberMe')}
+            {/*  <div>
                 <Field placeholder={'Email'} validate={[required]}
                        name={'email'} component={Input}/>
             </div>
             <div>
-                <Field placeholder={'password'}
+                <Field placeholder={'Password'}
                        validate={[required]} name={'password'}
                        component={Input} type={'password'}/>
             </div>
@@ -55,9 +61,9 @@ export const LoginForm: React.FC<InjectedFormProps<FormDataType>> = (props: any)
                 <Field type={'checkbox'} name={'rememberMe'}
                        component={Input}/>
                 Remember Me
-            </div>
-            {props.error && <div className={style.formSummaryError}>
-                {props.error}
+            </div>*/}
+            {error && <div className={style.formSummaryError}>
+                {error}
             </div>}
             <div>
                 <button>LogIn</button>

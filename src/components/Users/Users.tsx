@@ -2,24 +2,27 @@ import {InitialStateType} from "../../redux/users-reducer";
 import styles from './Users.module.css'
 import React from 'react'
 import seriousSem from '../assets/seriousSem.jpg'
-import {NavLink, Redirect} from "react-router-dom";
+import {NavLink} from "react-router-dom";
+import {Paginator} from "../common/Paginator/Paginator";
 
 export type UsersType = {
     users: Array<InitialStateType>
-    //follow: (userId: number) => void
-    //unfollow: (userId: number) => void
     pageSize: number
     totalUsersCount: number
     currentPage: number
     onPageChanged: (pageNumber: number) => void
     disable: Array<number>
-    //desableButton: (disable: boolean, userId: number) => void
+    isAuth?: boolean
     unFollow: (userId: number) => void
     Follow: (userId: number) => void
+
+    //follow: (userId: number) => void
+    //unfollow: (userId: number) => void
+    //desableButton: (disable: boolean, userId: number) => void
     //setTotalUsersCount: (totalCount: number) => void
     //setUsers: (users: Array<InitialStateType>) => void
     //setCurrentPage: (pageNumber: number) => void
-    isAuth?:boolean
+
 }
 
 export const Users = (props: UsersType) => {
@@ -76,18 +79,9 @@ export const Users = (props: UsersType) => {
 
     //if (props.isAuth===false) return <Redirect to={'/login'}/>
     return <div>
-        <div>
-            {pages.map(p => {
-                    return <span className={
-                        props.currentPage === p ? styles.selectedPage : ''}
-                                 onClick={(e) => {
-                                     props.onPageChanged(p)
-                                 }}>
-                            {p}
-                        </span>
-                }
-            )}
-        </div>
+        <Paginator currentPage={props.currentPage} onPageChanged={props.onPageChanged}
+                   totalUsersCount={props.totalUsersCount}
+                   pageSize={props.pageSize} />
         {
             props.users.map(u => <div key={u.id}>
             <span>
