@@ -31,8 +31,9 @@ export const Paginator = (props: UsersType,{portionSize=10}) => {
             {pages
                 .filter(p=>p>=leftPortionPageNumber && p<=rightPortionPageNumber)
                 .map((p) => {
-                return <span className={cn({ [styles.selectedPage]
-                        : props.currentPage === p},  styles.selectedPage )}
+                return <span className={cn({
+                    [styles.selectedPage]: props.currentPage === p
+                },  styles.pageNumber )}
                                 key={p}
                              onClick={(e) => {
                                  props.onPageChanged(p)
