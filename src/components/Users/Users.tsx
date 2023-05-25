@@ -78,7 +78,7 @@ export const Users = (props: UsersType) => {
     //if (props.isAuth===false) return <Redirect to={'/login'}/>
     return <div>
         <Paginator currentPage={props.currentPage} onPageChanged={props.onPageChanged}
-                   totalUsersCount={props.totalUsersCount}
+                   totalItemsCount={props.totalUsersCount}
                    pageSize={props.pageSize}/>
         <div>
             {

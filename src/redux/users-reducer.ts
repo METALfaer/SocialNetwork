@@ -62,7 +62,7 @@ export type UsersStateType = {
 
 const initialState: UsersStateType = {
     users: [],
-    pageSize: 5,//количество пользователей на страничку
+    pageSize: 10,//количество пользователей на страничку
     totalUsersCount: 0,//количество всех пользователей пришедших нам
     currentPage: 2,//номер выбранной страницы(активной)
     disable: [],
