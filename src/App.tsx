@@ -2,9 +2,7 @@ import React, {Component} from 'react';
 import './App.css';
 import {Navbar} from "./components/Navbar/Navbar";
 import {Route, Switch, withRouter} from 'react-router-dom';
-import DialogsContainer from "./components/Dialogs/DialogsContainer";
 import UsersContainer from "./components/Users/UsersContainer";
-import ProfileContainer from "./components/Profile/ProfileContainer";
 import HeaderContainer from "./components/Header/HeaderContainer";
 import Login from "./components/Login/Login";
 import {connect} from "react-redux";
@@ -13,7 +11,10 @@ import {initializeApp} from "./redux/app-reducer";
 import {StoreType} from "./redux/redux-store";
 import logo from "./logo.svg";
 import s from "./components/Profile/ProfileInfo//ProfileInfo.module.css";
+import {withSuspense} from "./hoc/withSuspense";
 
+const ProfileContainer = React.lazy(() => import("./components/Profile/ProfileContainer"))
+const DialogsContainer = React.lazy(() => import("./components/Dialogs/DialogsContainer"))
 
 type AppType = {
     initializeApp: () => void
@@ -49,9 +50,9 @@ class App extends Component<AppType> {
                 <div className='app-wrapper-content'>
                     <Switch>
                         <Route path='/profile/:userId?'
-                               render={() => <ProfileContainer/>}/>
+                               render={withSuspense(ProfileContainer)}/>
                         <Route path='/dialog'
-                               render={() => <DialogsContainer/>}/>
+                               render={withSuspense(DialogsContainer)}/>
                         <Route path='/users'
                                render={() => <UsersContainer/>}/>
                         <Route path='/login'
