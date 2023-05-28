@@ -13,16 +13,22 @@ export const profileAPI = {
         return instance.get(`profile/` + userId)
             .then(res => res.data)
     },
-    getUserStatus(userId: any){
-        return instance.get(`profile/status/`+userId)
-            .then(res=>res.data)
+    getUserStatus(userId: any) {
+        return instance.get(`profile/status/` + userId)
+            .then(res => res.data)
     },
-    updateStatus(status:any){
+    updateStatus(status: any) {
         return instance.put('profile/status', {status})
-            .then(res=>res.data)
+            .then(res => res.data)
     },
-    photo(photo:any){
-        return instance.put('profile/photo', {photo},)
-            .then(res=>res.data)
+    savePhoto(photoFile: any) {
+        const formData = new FormData()
+        formData.append('image', photoFile)
+        return instance.put('profile/photo', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+            .then(res => res.data)
     }
 }

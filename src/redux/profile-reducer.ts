@@ -5,6 +5,7 @@ const ADD_POST = 'ADD-POST';
 //const UPDATE_NEW_POST_TEXT = 'UPDATE-NEW-POST-TEXT';
 const SET_USER_PROFILE = 'SET_USER_PROFILE';
 const SET_STATUS = 'SET_STATUS';
+const SAVE_PHOTO_SUCCESS = 'SAVE_PHOTO_SUCCESS';
 
 export type PostsType = {
     id: number
@@ -48,19 +49,24 @@ export type SetStatusType = {
     status: any
     type: 'SET_STATUS'
 }
+export type SavePhotoSuccessType = {
+    photos: any
+    type: 'SAVE_PHOTO_SUCCESS'
+}
 
 export type ProfileActionsType = AddPostActionType
     | UpdateNewPostTextActionType
     | SetUserProfileType
     | SetStatusType
+    | SavePhotoSuccessType
 
 let initialState: StateProfilePageType = {
     posts: [
         {id: 1, message: 'more many', likesCount: 14},
         {id: 2, message: 'want meny many', likesCount: 32}
     ],
-    profile: null,
 
+    profile: null,
     status: ''
 }
 
@@ -113,6 +119,15 @@ const profileReducer = (state = initialState, action: ProfileActionsType) => {
                 status: action.status
             }
         }
+        case "SAVE_PHOTO_SUCCESS": {
+            return {
+                ...state,
+                profile: {
+                    ...state.profile,
+                    photos:action.photos
+                }
+            }
+        }
 
         default:
             return state
@@ -120,6 +135,8 @@ const profileReducer = (state = initialState, action: ProfileActionsType) => {
 }
 
 export const addPostActionCreator = (newPostText: any): AddPostActionType => ({type: ADD_POST, newPostText})
+export const savePhotoSuccess = (photos: any): SavePhotoSuccessType => ({type: SAVE_PHOTO_SUCCESS, photos})
+
 /*export const updateNewPostTextActionCreator = (text: string): UpdateNewPostTextActionType => (
     {type: UPDATE_NEW_POST_TEXT, newText: text})*/
 export const setUserProfile = (profile: UserProfileType): SetUserProfileType => (
@@ -150,14 +167,17 @@ export const updateUserStatus = (status: any): AppThunk => {
     }
 }
 
-export const thunk = (status: any): AppThunk => {
+export const savePhoto = (file: any): AppThunk => {
     return async (dispatch) => {
-        let response = await profileAPI.updateStatus(status)
+
+        let response = await profileAPI.savePhoto(file)
+
         if (response.resultCode === 0) {
-            dispatch(setStatus(status))
+            dispatch(savePhotoSuccess(response.data.photos))
         }
     }
 }
+
 
 export default profileReducer
 
