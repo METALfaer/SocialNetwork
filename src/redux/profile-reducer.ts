@@ -60,6 +60,7 @@ let initialState: StateProfilePageType = {
         {id: 2, message: 'want meny many', likesCount: 32}
     ],
     profile: null,
+
     status: ''
 }
 
@@ -141,6 +142,15 @@ export const getUserStatus = (userId: any): AppThunk => {
 }
 
 export const updateUserStatus = (status: any): AppThunk => {
+    return async (dispatch) => {
+        let response = await profileAPI.updateStatus(status)
+        if (response.resultCode === 0) {
+            dispatch(setStatus(status))
+        }
+    }
+}
+
+export const thunk = (status: any): AppThunk => {
     return async (dispatch) => {
         let response = await profileAPI.updateStatus(status)
         if (response.resultCode === 0) {

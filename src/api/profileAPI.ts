@@ -20,5 +20,9 @@ export const profileAPI = {
     updateStatus(status:any){
         return instance.put('profile/status', {status})
             .then(res=>res.data)
+    },
+    photo(photo:any){
+        return instance.put('profile/photo', {photo},)
+            .then(res=>res.data)
     }
 }

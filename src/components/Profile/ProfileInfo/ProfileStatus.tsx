@@ -1,5 +1,6 @@
 import React, {ChangeEvent, Component} from 'react';
 
+/*
 type ProfileStatusType = {
     status: any
     updateStatus: (status: any) => void
@@ -63,4 +64,4 @@ class ProfileStatus extends Component<ProfileStatusType> {
     }
 }
 
-export default ProfileStatus;
+export default ProfileStatus;*/
