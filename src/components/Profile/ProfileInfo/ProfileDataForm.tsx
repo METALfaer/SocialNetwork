@@ -1,26 +1,36 @@
 import React from "react";
-import {createFild, Input} from "../../common/FormsControls/FormsControls";
+import {createFild, Input, Textarea} from "../../common/FormsControls/FormsControls";
+import reduxForm from "redux-form";
 
-export const ProfileDataForm = (profile: any) => {
+const ProfileDataForm = (profile: any, handleSUbmit: any) => {
     return (
         <form>
-            <div>
-                <button onClick={props.goToEditMode}>save</button>
+            <div onSubmit={handleSUbmit}>
+                <button>save</button>
             </div>
             <div>
                 <b>Full name: </b> {createFild('Full name',
                 'fullName', [], Input)}
             </div>
             <div>
-                <b>Looking for a job: </b> {props.profile.lookingForAJob ? 'yes' : 'no'}
+                <b>Looking for a job: </b>
+                {createFild(
+                    '', 'fullName', [], Input,
+                    {type: 'checkbox'})}
             </div>
-            {props.profile.lookingForAJob &&
+
             <div>
-                <b>My pfessional skils: </b> {props.profile.lookingForAJobDescription}
+                <b>My pfessional skils: </b>
+                {createFild(
+                    'My pfessional skils', 'lookingForAJobDescription', [], Textarea
+                )}
             </div>
-            }
+
             <div>
-                <b>About me: </b> {props.profile.aboutMe}
+                <b>About me: </b>
+                {createFild(
+                    'About me', 'aboutMe', [], Textarea
+                )}
             </div>
             {/*<div>
                 <b>Contacts: </b> {Object.keys(props.profile.contacts).map(key => {
@@ -30,3 +40,5 @@ export const ProfileDataForm = (profile: any) => {
         </form>
     )
 }
+
+export const ProfileDataFormReduxForm = reduxForm({form: 'edit-profile'})(ProfileDataForm)

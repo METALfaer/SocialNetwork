@@ -3,7 +3,7 @@ import React, {ChangeEvent, useState} from "react";
 import s from './ProfileInfo.module.css'
 import ProfileStatusWithHooks from "./ProfileStatusWithHooks";
 import userPhoto from './../../assets/seriousSem.jpg'
-import {ProfileDataForm} from "./ProfileDataForm";
+import {ProfileDataForm, ProfileDataFormReduxForm} from "./ProfileDataForm";
 
 
 type ProfileInfoType = {
@@ -31,6 +31,10 @@ export const ProfileInfo = (props: ProfileInfoType) => {
         }
     }
 
+    const onSubmit=(formData:any)=>{
+
+    }
+
     return (
         <div>
             <div className='face'>
@@ -41,7 +45,7 @@ export const ProfileInfo = (props: ProfileInfoType) => {
                 {props.isOwner && <input type={'file'} onChange={onMainPhotoSelected}/>}
 
                 {editMode
-                    ? <ProfileDataForm profile={props.profile}/>
+                    ? <ProfileDataFormReduxForm profile={props.profile} onSubmit={onSubmit}/>
                     : <ProfileData profile={props.profile}
                                    isOwner={props.isOwner}
                                    goToEditMode={() => {
@@ -55,8 +59,6 @@ export const ProfileInfo = (props: ProfileInfoType) => {
             </div>
         </div>
     )
-
-
 
 
     const ProfileData = (profile: any, isOwner: any, goToEditMode: any) => {
