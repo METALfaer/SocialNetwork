@@ -124,7 +124,7 @@ const profileReducer = (state = initialState, action: ProfileActionsType) => {
                 ...state,
                 profile: {
                     ...state.profile,
-                    photos:action.photos
+                    photos: action.photos
                 }
             }
         }
@@ -179,12 +179,12 @@ export const savePhoto = (file: any): AppThunk => {
 }
 
 export const saveProfile = (profile: any): AppThunk => {
-    return async (dispatch) => {
-
+    return async (dispatch, getState) => {
+        const userId = getState().auth.userId
         let response = await profileAPI.saveProfile(profile)
 
         if (response.resultCode === 0) {
-            dispatch(savePhotoSuccess(response.data.photos))
+            dispatch(setProfile(userId))
         }
     }
 }
