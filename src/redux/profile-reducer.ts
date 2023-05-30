@@ -178,6 +178,17 @@ export const savePhoto = (file: any): AppThunk => {
     }
 }
 
+export const saveProfile = (profile: any): AppThunk => {
+    return async (dispatch) => {
+
+        let response = await profileAPI.saveProfile(profile)
+
+        if (response.resultCode === 0) {
+            dispatch(savePhotoSuccess(response.data.photos))
+        }
+    }
+}
+
 
 export default profileReducer
 

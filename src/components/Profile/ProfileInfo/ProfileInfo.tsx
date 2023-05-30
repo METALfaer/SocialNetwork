@@ -12,6 +12,7 @@ type ProfileInfoType = {
     updateUserStatus: (status: any) => void
     isOwner: any
     savePhoto: (file: any) => void
+    saveProfile: () => void
 }
 export const ProfileInfo = (props: ProfileInfoType) => {
 
@@ -31,8 +32,8 @@ export const ProfileInfo = (props: ProfileInfoType) => {
         }
     }
 
-    const onSubmit=(formData:any)=>{
-
+    const onSubmit = (formData: any) => {
+        props.saveProfile(formData)
     }
 
     return (

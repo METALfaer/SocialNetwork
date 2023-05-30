@@ -30,5 +30,8 @@ export const profileAPI = {
             }
         })
             .then(res => res.data)
+    },
+    saveProfile(profile:any){
+        return instance.put(`profile/` + profile)
     }
 }
