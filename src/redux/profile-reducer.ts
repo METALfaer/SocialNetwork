@@ -190,6 +190,7 @@ export const saveProfile = (profile: any): AppThunk => {
             dispatch(stopSubmit('edit-profile',
                 /*validate for self error one contact{'contacts': {'facebook': response.data.messages[0]} }))*/
                 {_error: response.data.messages[0]}))
+            return Promise.reject(response.data.messages[0])
         }
     }
 }

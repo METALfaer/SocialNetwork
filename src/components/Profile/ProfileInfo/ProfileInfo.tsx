@@ -32,9 +32,12 @@ export const ProfileInfo = (props: ProfileInfoType) => {
         }
     }
 
-    const onSubmit = async (formData: any) => {
-        await props.saveProfile(formData)
-            setEditMode(false)
+    const onSubmit = (formData: any) => {
+        props.saveProfile(formData).then(
+            () => {
+                setEditMode(false)
+            }
+        )
     }
 
     return (
@@ -87,7 +90,8 @@ export const ProfileInfo = (props: ProfileInfoType) => {
             </div>
             <div>
                 <b>Contacts: </b> {Object.keys(props.profile.contacts).map(key => {
-                return <Contact key={key} contactTitle={key} contactValue={props.contacts[key]}/>
+                return <Contact key={key} contactTitle={key}
+                                contactValue={props.contacts[key]}/>
             })}
             </div>
         </div>
