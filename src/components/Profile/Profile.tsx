@@ -2,15 +2,17 @@ import React from "react";
 import s from './Profile.module.css'
 import {ProfileInfo} from "./ProfileInfo/ProfileInfo";
 import MyPostsContainer from "./MyPosts/MyPostsContainer";
+import {UserProfileType} from "../../redux/profile-reducer";
+import {PhotoFileType} from "../../api/profileAPI";
 
 
 type ProfileType = {
-    profile: any
-    status: any
-    updateUserStatus: (status:any)=>void
-    isOwner:any
-    savePhoto: (file: any) => void
-    saveProfile: () => void
+    profile: UserProfileType
+    status: string
+    updateUserStatus: (status:string)=>void
+    isOwner:boolean
+    savePhoto: (file: File) => void
+    saveProfile: (profile:UserProfileType) => Promise<void>
 }
 
 export const Profile = (props: ProfileType) => {

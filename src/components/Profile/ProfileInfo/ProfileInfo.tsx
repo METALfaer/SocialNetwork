@@ -3,16 +3,17 @@ import React, {ChangeEvent, useState} from "react";
 import s from './ProfileInfo.module.css'
 import ProfileStatusWithHooks from "./ProfileStatusWithHooks";
 import userPhoto from './../../assets/seriousSem.jpg'
-import {ProfileDataForm, ProfileDataFormReduxForm} from "./ProfileDataForm";
+import {ProfileDataFormReduxForm} from "./ProfileDataForm";
+import {ContactsKeys, UserProfileType} from "../../../redux/profile-reducer";
 
 
 type ProfileInfoType = {
-    profile: any
-    status: any
-    updateUserStatus: (status: any) => void
-    isOwner: any
-    savePhoto: (file: any) => void
-    saveProfile: (formData: any) => void
+    profile: UserProfileType
+    status: string
+    updateUserStatus: (status: string) => void
+    isOwner: boolean
+    savePhoto: (file: File) => void
+    saveProfile: (profile: UserProfileType) => Promise<void>
 }
 export const ProfileInfo = (props: ProfileInfoType) => {
 
@@ -25,15 +26,14 @@ export const ProfileInfo = (props: ProfileInfoType) => {
     }
 
     const onMainPhotoSelected = (e: ChangeEvent<HTMLInputElement>) => {
-        // @ts-ignore
-        if (e.target.files.length) {
-            // @ts-ignore
+        if (e.target.files?.length) {
             props.savePhoto(e.target.files[0])
         }
     }
 
-    const onSubmit = (formData: any) => {
-        props.saveProfile(formData).then(
+    const onSubmit = (profile: any) => {
+        console.log(profile)
+        props.saveProfile(profile).then(
             () => {
                 setEditMode(false)
             }
@@ -50,10 +50,10 @@ export const ProfileInfo = (props: ProfileInfoType) => {
                 {props.isOwner && <input type={'file'} onChange={onMainPhotoSelected}/>}
 
                 {editMode
-                    ? <ProfileDataFormReduxForm profile={props.profile}
-                                                onSubmit={onSubmit}
-                                                initialValues={props.profile}
-                    />
+                    ? <ProfileDataFormReduxForm onSubmit={onSubmit}
+                                                initialValues={{profile: props.profile}}
+                     />
+
                     : <ProfileData profile={props.profile}
                                    isOwner={props.isOwner}
                                    goToEditMode={() => {
@@ -69,39 +69,50 @@ export const ProfileInfo = (props: ProfileInfoType) => {
     )
 
 
-    const ProfileData = (profile: any, isOwner: any, goToEditMode: any) => {
-        return <div>
-            {props.isOwner && <div>
-                <button onClick={props.goToEditMode}>edit</button>
-            </div>}
-            <div>
-                <b>Full name: </b> {props.profile.fullName}
-            </div>
-            <div>
-                <b>Looking for a job: </b> {props.profile.lookingForAJob ? 'yes' : 'no'}
-            </div>
-            {props.profile.lookingForAJob &&
-            <div>
-                <b>My pfessional skils: </b> {props.profile.lookingForAJobDescription}
-            </div>
-            }
-            <div>
-                <b>About me: </b> {props.profile.aboutMe}
-            </div>
-            <div>
-                <b>Contacts: </b> {Object.keys(props.profile.contacts).map(key => {
-                return <Contact key={key} contactTitle={key}
-                                contactValue={props.contacts[key]}/>
-            })}
-            </div>
+}
+type ProfileDataType = {
+    profile: UserProfileType,
+    isOwner: boolean,
+    goToEditMode: any
+}
+const ProfileData = (props: ProfileDataType) => {
+    return <div>
+        {props.isOwner && <div>
+            <button onClick={props.goToEditMode}>edit</button>
+        </div>}
+        <div>
+            <b>Full name: </b> {props.profile.fullName}
         </div>
-    }
+        <div>
+            <b>Looking for a job: </b> {props.profile.lookingForAJob ? 'yes' : 'no'}
+        </div>
+        {props.profile.lookingForAJob &&
+        <div>
+            <b>My pfessional skils: </b> {props.profile.lookingForAJobDescription}
+        </div>
+        }
+        {/* <div>
+            <b>About me: </b> {props.profile.aboutMe}
+        </div>*/}
+        <div>
+            <b>Contacts: </b> {Object.keys(props.profile.contacts).map(key => {
+            const typedKey = key as unknown as ContactsKeys
+            const value = props.profile.contacts[typedKey]
+            return <Contact key={key} contactTitle={typedKey}
+                            contactValue={value}/>
+        })}
+        </div>
+    </div>
+}
 
-    const Contact = (contactTitle: any, contactValue: any) => {
-        return (
-            <div className={s.contact}>
-                <b>{props.contactTitle}: </b>{props.contactValue}
-            </div>
-        )
-    }
+type ContactType = {
+    contactTitle: ContactsKeys,
+    contactValue: string
+}
+const Contact = (props: ContactType) => {
+    return (
+        <div className={s.contact}>
+            <b>{props.contactTitle}</b>: {props.contactValue}
+        </div>
+    )
 }

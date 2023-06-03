@@ -1,22 +1,26 @@
 import React from "react";
 import {createFild, Input, Textarea} from "../../common/FormsControls/FormsControls";
-import reduxForm from "redux-form";
+import  {InjectedFormProps, reduxForm} from "redux-form";
 import s from './ProfileInfo.module.css'
 import style from "../../common/FormsControls/FormsControls.module.css";
 
-const ProfileDataForm = (handleSUbmit: any, profile: any, error: any) => {
+type ProfileDataFormType={
+    profile: any,
+
+}
+const ProfileDataForm: React.FC<InjectedFormProps<ProfileDataFormType>> = ({handleSubmit, initialValues, error },props) => {
     return (
         <form>
-            <div onSubmit={handleSUbmit}>
-                {error && <div className={style.formSummaryError}>
-                    {error}
-                </div>}
+            <div onSubmit={handleSubmit}>
+               
                 <button>save</button>
             </div>
+
             <div>
                 <b>Full name: </b> {createFild('Full name',
                 'fullName', [], Input)}
             </div>
+
             <div>
                 <b>Looking for a job: </b>
                 {createFild(
@@ -37,19 +41,23 @@ const ProfileDataForm = (handleSUbmit: any, profile: any, error: any) => {
                     'About me', 'aboutMe', [], Textarea
                 )}
             </div>
+
             <div>
-                <b>Contacts: </b> {Object.keys(profile.contacts).map(key => {
+                <b>Contacts: </b>
+                {initialValues.profile.contacts && Object.keys(initialValues.profile.contacts)?.map(key => {
+
                 return <div key={key} className={s.contact}>
+
                     <b>{key}:</b>{createFild(
+
                     key, 'contacts.' + key, [], Input
                 )}
                 </div>
-                /* <Contact key={key} contactTitle={key}
-                                 contactValue={props.contacts[key]}/>*/
             })}
             </div>
+
         </form>
     )
 }
 
-export const ProfileDataFormReduxForm = reduxForm({form: 'edit-profile'})(ProfileDataForm)
+export const ProfileDataFormReduxForm = reduxForm<ProfileDataFormType>({form: 'edit-profile'})(ProfileDataForm)

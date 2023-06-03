@@ -1,4 +1,4 @@
-import {profileAPI} from "../api/profileAPI";
+import {PhotosType, profileAPI} from "../api/profileAPI";
 import {AppThunk} from "./redux-store";
 import {stopSubmit} from "redux-form";
 
@@ -15,48 +15,56 @@ export type PostsType = {
 }
 export type StateProfilePageType = {
     posts: Array<PostsType>
-    profile: any
-    status: any
+    profile: UserProfileType
+    status: string
 }
 export type UserProfileType = {
+    photos: PhotosType;
     userId: number
     lookingForAJob: boolean
     lookingForAJobDescription: string
     fullName: string
-    contacts: {
-        github: string
-        vk: string
-        facebook: string
-        instagram: string
-        twitter: string
-        website: string
-        youtube: string
-        mainLink: string
-    }
+    contacts: ContactsType
 }
+
+export type ContactsKeys = 'github' | 'vk' |'facebook' |'instagram' |'twitter' |'website' |'youtube' |'mainLink'
+// export type ContactsType={
+//     github: string
+//     vk: string
+//     facebook: string
+//     instagram: string
+//     twitter: string
+//     website: string
+//     youtube: string
+//     mainLink: string
+// }
+
+export type ContactsType = {
+    [key in ContactsKeys]: string;
+};
 export type AddPostActionType = {
     type: 'ADD-POST'
-    newPostText: any
+    newPostText: string
 }
-export type UpdateNewPostTextActionType = {
+/*export type UpdateNewPostTextActionType = {
     type: 'UPDATE-NEW-POST-TEXT',
     newText: string
-}
+}*/
 export type SetUserProfileType = {
     type: 'SET_USER_PROFILE'
     profile: UserProfileType
 }
 export type SetStatusType = {
-    status: any
+    status: string
     type: 'SET_STATUS'
 }
 export type SavePhotoSuccessType = {
-    photos: any
+    photos: PhotosType
     type: 'SAVE_PHOTO_SUCCESS'
 }
 
 export type ProfileActionsType = AddPostActionType
-    | UpdateNewPostTextActionType
+    // | UpdateNewPostTextActionType
     | SetUserProfileType
     | SetStatusType
     | SavePhotoSuccessType
@@ -67,11 +75,27 @@ let initialState: StateProfilePageType = {
         {id: 2, message: 'want meny many', likesCount: 32}
     ],
 
-    profile: null,
+    profile: {
+        userId: 0,
+        fullName: '',
+        photos: {large: undefined, small: undefined},
+        contacts: {
+            facebook: '',
+            github: '',
+            instagram: '',
+            mainLink: '',
+            twitter: '',
+            vk: '',
+            website: '',
+            youtube: ''
+        },
+        lookingForAJob: true,
+        lookingForAJobDescription: '',
+    },
     status: ''
 }
 
-const profileReducer = (state = initialState, action: ProfileActionsType) => {
+const profileReducer = (state: StateProfilePageType = initialState, action: ProfileActionsType): StateProfilePageType => {
 
     switch (action.type) {
 
@@ -84,7 +108,6 @@ const profileReducer = (state = initialState, action: ProfileActionsType) => {
             return {
                 ...state,
                 posts: [...state.posts, newPost],
-                newPostText: ''
             }
         }
         /*let newPost = {
@@ -135,14 +158,14 @@ const profileReducer = (state = initialState, action: ProfileActionsType) => {
     }
 }
 
-export const addPostActionCreator = (newPostText: any): AddPostActionType => ({type: ADD_POST, newPostText})
-export const savePhotoSuccess = (photos: any): SavePhotoSuccessType => ({type: SAVE_PHOTO_SUCCESS, photos})
+export const addPostActionCreator = (newPostText: string): AddPostActionType => ({type: ADD_POST, newPostText})
+export const savePhotoSuccess = (photos: PhotosType): SavePhotoSuccessType => ({type: SAVE_PHOTO_SUCCESS, photos})
 
 /*export const updateNewPostTextActionCreator = (text: string): UpdateNewPostTextActionType => (
     {type: UPDATE_NEW_POST_TEXT, newText: text})*/
 export const setUserProfile = (profile: UserProfileType): SetUserProfileType => (
     {type: SET_USER_PROFILE, profile})
-export const setStatus = (status: any): SetStatusType => (
+export const setStatus = (status: string): SetStatusType => (
     {type: SET_STATUS, status})
 
 export const setProfile = (userId: number): AppThunk => {
@@ -152,14 +175,14 @@ export const setProfile = (userId: number): AppThunk => {
     }
 }
 
-export const getUserStatus = (userId: any): AppThunk => {
+export const getUserStatus = (userId: number): AppThunk => {
     return async (dispatch) => {
         let response = await profileAPI.getUserStatus(userId)
         dispatch(setStatus(response))
     }
 }
 
-export const updateUserStatus = (status: any): AppThunk => {
+export const updateUserStatus = (status: string): AppThunk => {
     return async (dispatch) => {
         let response = await profileAPI.updateStatus(status)
         if (response.resultCode === 0) {
@@ -168,24 +191,24 @@ export const updateUserStatus = (status: any): AppThunk => {
     }
 }
 
-export const savePhoto = (file: any): AppThunk => {
+export const savePhoto = (file: File): AppThunk => {
     return async (dispatch) => {
 
         let response = await profileAPI.savePhoto(file)
 
         if (response.resultCode === 0) {
-            dispatch(savePhotoSuccess(response.data.photos))
+            dispatch(savePhotoSuccess(response.data))
         }
     }
 }
 
-export const saveProfile = (profile: any): AppThunk => {
+export const saveProfile = (profile: UserProfileType): AppThunk => {
     return async (dispatch, getState) => {
         const userId = getState().auth.userId
         let response = await profileAPI.saveProfile(profile)
 
         if (response.data.resultCode === 0) {
-            dispatch(setProfile(userId))
+            dispatch(setProfile(userId as number))
         } else {
             dispatch(stopSubmit('edit-profile',
                 /*validate for self error one contact{'contacts': {'facebook': response.data.messages[0]} }))*/
