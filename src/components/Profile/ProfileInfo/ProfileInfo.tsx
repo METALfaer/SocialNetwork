@@ -12,7 +12,7 @@ type ProfileInfoType = {
     updateUserStatus: (status: any) => void
     isOwner: any
     savePhoto: (file: any) => void
-    saveProfile: (formData:any) => void
+    saveProfile: (formData: any) => void
 }
 export const ProfileInfo = (props: ProfileInfoType) => {
 
@@ -32,9 +32,9 @@ export const ProfileInfo = (props: ProfileInfoType) => {
         }
     }
 
-    const onSubmit = (formData: any) => {
-        props.saveProfile(formData)
-        setEditMode(false)
+    const onSubmit = async (formData: any) => {
+        await props.saveProfile(formData)
+            setEditMode(false)
     }
 
     return (
@@ -93,10 +93,10 @@ export const ProfileInfo = (props: ProfileInfoType) => {
         </div>
     }
 
-    const Contact = ({contactTitle: any, contactValue: any}) => {
+    const Contact = (contactTitle: any, contactValue: any) => {
         return (
             <div className={s.contact}>
-                <b>{contactTitle}: </b>{contactValue}
+                <b>{props.contactTitle}: </b>{props.contactValue}
             </div>
         )
     }
