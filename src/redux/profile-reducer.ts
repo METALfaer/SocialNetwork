@@ -184,11 +184,12 @@ export const saveProfile = (profile: any): AppThunk => {
         const userId = getState().auth.userId
         let response = await profileAPI.saveProfile(profile)
 
-        if (response.resultCode === 0) {
+        if (response.data.resultCode === 0) {
             dispatch(setProfile(userId))
-        }else {
-            dispatch(stopSubmit('login', {
-                _error: response.data.messages[0]}))
+        } else {
+            dispatch(stopSubmit('edit-profile',
+                /*validate for self error one contact{'contacts': {'facebook': response.data.messages[0]} }))*/
+                {_error: response.data.messages[0]}))
         }
     }
 }

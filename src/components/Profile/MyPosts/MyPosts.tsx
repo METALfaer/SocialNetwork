@@ -40,7 +40,13 @@ const AddNewPostFormRedux = reduxForm<FormDataType>({form: 'ProfileAddNewPostFor
 export const MyPosts = React.memo((props: MyPostsType) => {
 
     //let newPostElement = React.createRef<HTMLTextAreaElement>()
-    const postsElements = props.posts.map(p => <Post message={p.message} likesCount={p.likesCount} key={p.id}/>)
+    const postsElements =
+        [...props.posts]
+            .reverse()
+            /* props.posts*/
+            .map(p => <Post message={p.message}
+                            likesCount={p.likesCount}
+                            key={p.id}/>)
 
     const onAddPost = (values: any) => {
         props.addPost(values.newPostText)
