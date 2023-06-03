@@ -12,7 +12,7 @@ type ProfileInfoType = {
     updateUserStatus: (status: any) => void
     isOwner: any
     savePhoto: (file: any) => void
-    saveProfile: () => void
+    saveProfile: (formData:any) => void
 }
 export const ProfileInfo = (props: ProfileInfoType) => {
 

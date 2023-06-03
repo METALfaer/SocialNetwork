@@ -1,5 +1,6 @@
 import {profileAPI} from "../api/profileAPI";
 import {AppThunk} from "./redux-store";
+import {stopSubmit} from "redux-form";
 
 const ADD_POST = 'ADD-POST';
 //const UPDATE_NEW_POST_TEXT = 'UPDATE-NEW-POST-TEXT';
@@ -185,6 +186,9 @@ export const saveProfile = (profile: any): AppThunk => {
 
         if (response.resultCode === 0) {
             dispatch(setProfile(userId))
+        }else {
+            dispatch(stopSubmit('login', {
+                _error: response.data.messages[0]}))
         }
     }
 }
