@@ -23,12 +23,13 @@ const Login = (props: any) => {
 
     return <div>
         <h1>LOGIN</h1>
-        <LoginReduxForm onSubmit={onSubmit}/>
+        <LoginReduxForm onSubmit={onSubmit} />
     </div>
 }
 
 const mapStateToProps = (state: StoreType) => ({
-    isAuth: state.auth.isAuth
+    isAuth: state.auth.isAuth,
+    captchaUrl: state.auth.captchaUrl
 })
 
 export default connect(mapStateToProps, {logIn, logOut})(Login)
@@ -48,6 +49,7 @@ export const LoginForm: React.FC<InjectedFormProps<FormDataType>> = ({handleSubm
             {createFild(null, 'remember me',
                 [], Input,
                 {type: 'checkbox'}, 'rememberMe')}
+
             {/*  <div>
                 <Field placeholder={'Email'} validate={[required]}
                        name={'email'} component={Input}/>

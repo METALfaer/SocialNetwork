@@ -7,22 +7,28 @@ type StateType = {
     email: null | string,
     login: null | string,
     isAuth?: boolean
+    captchaUrl?: null
 }
 
 const SET_USER_DATA = 'AUTH/SET_USER_DATA'
+const GET_CAPTCHA_URL_SUCCESS = 'GET_CAPTCHA_URL_SUCCESS'
 
 export type SetAuthUserDataType = {
     type: 'AUTH/SET_USER_DATA'
     payload: StateType
-
 }
-export type AuthActionsType = SetAuthUserDataType
+export type getCaptchaUrlSuccess = {
+    type: 'GET_CAPTCHA_URL_SUCCESS'
+    captchaUrl: any
+}
+export type AuthActionsType = SetAuthUserDataType | getCaptchaUrlSuccess
 
 let initialState = {
     userId: null,
     email: null,
     login: null,
-    isAuth: false
+    isAuth: false,
+    captchaUrl: null
 }
 
 export const authReducer = (state: StateType = initialState, action: AuthActionsType) => {
@@ -33,6 +39,13 @@ export const authReducer = (state: StateType = initialState, action: AuthActions
                 ...action.payload,
             }
         }
+        case "GET_CAPTCHA_URL_SUCCESS": {
+            return {
+                ...state,
+                captchaUrl: action.captchaUrl
+            }
+        }
+
         default:
             return state
     }
@@ -44,6 +57,9 @@ export const setAuthUserData = (userId: number | null,
                                 isAuth: boolean): SetAuthUserDataType => ({
     type: "AUTH/SET_USER_DATA",
     payload: {userId, email, login, isAuth}
+})
+export const getCaptchaUrlSuccess = (captchaUrl: any): getCaptchaUrlSuccess => ({
+    type: 'GET_CAPTCHA_URL_SUCCESS', captchaUrl
 })
 
 export const authMe = (): AppThunk => {
@@ -64,6 +80,9 @@ export const logIn = (data: logInDataType): AppThunk => {
         if (response.resultCode === 0) {
             dispatch(authMe())
         } else {
+            if (response.data.resultCode === 10) {
+                dispatch(getCaptchaURL())
+            }
             let message = response.messages.length > 0
                 ? response.messages[0]
                 : 'Some error'
@@ -82,5 +101,13 @@ export const logOut = (): AppThunk => {
                 null,
                 false))
         }
+    }
+}
+
+export const getCaptchaURL = (): AppThunk => {
+    return async (dispatch) => {
+        const response = await headerAPI.getCaptchaUrl()
+        const captchaUrl = response.data.url
+        dispatch(getCaptchaUrlSuccess(captchaUrl))
     }
 }

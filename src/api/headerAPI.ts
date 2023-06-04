@@ -22,6 +22,10 @@ export const headerAPI = {
     logOut() {
         return instance.delete(`auth/login`)
             .then(res => res.data)
+    },
+    getCaptchaUrl() {
+        return instance.get(`security/get-captcha-url`)
+            .then(res => res.data)
     }
 }
 export type logInDataType={
